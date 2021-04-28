@@ -7,11 +7,7 @@ async function main() {
     workDir: `${__dirname}/sub-a`
   })
 
-  try {
-    const x = await stack.preview()
-  } catch (err) {
-    console.log(err)
-  }
+  const x = await stack.preview()
 }
 
-main()
+main().catch(console.error)
