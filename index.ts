@@ -1,32 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 import { LocalWorkspace } from '@pulumi/pulumi/automation';
 
-import { Ware2GoStack, pipeline } from './pipeline';
-
-// async function main() {
-// const subA = await LocalWorkspace.createOrSelectStack({
-//   stackName: 'dev',
-//   workDir: `${__dirname}/sub-a`
-// })
-
-//   // const subB = await LocalWorkspace.createOrSelectStack({
-//   //   stackName: 'dev',
-//   //   workDir: `${__dirname}/sub-b`
-//   // })
-
-//   // console.log('Running `pulumi up` for sub-a')
-//   // const a = await subA.up()
-//   // console.log(a.stdout)
-
-//   // console.log('Running `pulumi up` for sub-b')
-//   // const b = await subB.up()
-//   // console.log(b.stdout)
-
-//   // pipeline
-
-// }
-
-// main().catch(console.error)
+import { Ware2GoStack, runPipeline } from './pipeline';
 
 const stacks: Ware2GoStack[] = [
   {
@@ -42,4 +17,4 @@ const stacks: Ware2GoStack[] = [
 const hotfix = false;
 const environment = 'dev';
 
-export default pipeline(stacks, hotfix, environment);
+runPipeline(stacks, hotfix, environment).catch(console.error);

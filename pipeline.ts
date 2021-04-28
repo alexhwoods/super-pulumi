@@ -5,21 +5,42 @@ export interface Ware2GoStack {
   runOnHotfix: boolean;
 }
 
-async function runPipeline(stacks: Ware2GoStack[], hotfix: boolean, environment: string) {
-  console.log(stacks);
+/**
+ * You can similarly have a previewPipeline step
+ */
 
-  const stacksToRun = await Promise.all([
+/**
+ *
+ * TODO: This needs to be a DAG.
+ *
+ * That gets more complicated when you think about skipping steps though.
+ * 
+ * @param stacks The array of stacks to run
+ * @param hotfix Is this a hotfix?
+ * @param environment 
+ */
+export async function runPipeline(stacks: Ware2GoStack[], hotfix: boolean, environment: string) {
+  const stacksToRun = 
     stacks
       .filter((stack) => !hotfix || stack.runOnHotfix)
       .map((s) =>
         pulumi.automation.LocalWorkspace.createOrSelectStack({
-          stackName: 'dev', // Should be environment
+          stackName: environment,
           workDir: s.directory,
         }),
-      ),
-  ]);
+      )
 
-  console.log(stacksToRun);
+  const resolvedStacks = await Promise.all(stacksToRun)
+
+  // TODO: Log about execution order
+
+  const executions: Promise<pulumi.automation.UpResult>[] = resolvedStacks.map(async s => {
+    const result = await s.up()
+
+    console.log(result.stdout)
+
+    return result
+  })
+
+  Promise.all(executions)
 }
-
-export const pipeline = runPipeline;
