@@ -1,7 +1,7 @@
 import * as pulumi from "@pulumi/pulumi"
 import { LocalWorkspace } from "@pulumi/pulumi/automation"
 
-const main = async () => {
+async function main() {
   const stack = await LocalWorkspace.createOrSelectStack({
     stackName: 'dev',
     workDir: `${__dirname}/sub-a`
