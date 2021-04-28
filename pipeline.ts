@@ -5,6 +5,12 @@ export interface Ware2GoStack {
   runOnHotfix: boolean;
 }
 
+export interface Pipeline {
+  stacks: Ware2GoStack[];
+  hotfix: boolean;
+  environment: string;
+}
+
 /**
  * You can similarly have a previewPipeline step
  */
@@ -19,13 +25,13 @@ export interface Ware2GoStack {
  * @param hotfix Is this a hotfix?
  * @param environment 
  */
-export async function runPipeline(stacks: Ware2GoStack[], hotfix: boolean, environment: string) {
+export async function runPipeline(pipeline: Pipeline) {
   const stacksToRun = 
-    stacks
-      .filter((stack) => !hotfix || stack.runOnHotfix)
+    pipeline.stacks
+      .filter((stack) => !pipeline.hotfix || stack.runOnHotfix)
       .map((s) =>
         pulumi.automation.LocalWorkspace.createOrSelectStack({
-          stackName: environment,
+          stackName: pipeline.environment,
           workDir: s.directory,
         }),
       )
@@ -38,6 +44,32 @@ export async function runPipeline(stacks: Ware2GoStack[], hotfix: boolean, envir
     const result = await s.up()
 
     console.log(result.stdout)
+
+    return result
+  })
+
+  Promise.all(executions)
+}
+
+export async function previewPipeline(pipeline: Pipeline) {
+  const stacksToRun = 
+    pipeline.stacks
+      .filter((stack) => !pipeline.hotfix || stack.runOnHotfix)
+      .map((s) =>
+        pulumi.automation.LocalWorkspace.createOrSelectStack({
+          stackName: pipeline.environment,
+          workDir: s.directory,
+        }),
+      )
+
+  const resolvedStacks = await Promise.all(stacksToRun)
+
+  // TODO: Log about execution order
+
+  const executions: Promise<pulumi.automation.PreviewResult>[] = resolvedStacks.map(async s => {
+    const result = await s.preview()
+
+    console.log(result.changeSummary)
 
     return result
   })
