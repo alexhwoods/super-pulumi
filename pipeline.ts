@@ -1,12 +1,12 @@
 import * as pulumi from '@pulumi/pulumi';
 
-export interface Ware2GoStack {
+export interface Stack {
   directory: string;
   runOnHotfix: boolean;
 }
 
 export interface Pipeline {
-  stacks: Ware2GoStack[];
+  stacks: Stack[];
   hotfix: boolean;
   environment: string;
 }
@@ -74,5 +74,5 @@ export async function previewPipeline(pipeline: Pipeline) {
     return result
   })
 
-  Promise.all(executions)
+  Promise.all(executions).catch(err => { throw err })
 }

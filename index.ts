@@ -1,7 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 import { LocalWorkspace } from '@pulumi/pulumi/automation';
 
-import { Ware2GoStack, runPipeline, Pipeline } from './pipeline';
+import { runPipeline, Pipeline, previewPipeline } from './pipeline';
 
 
 const pipeline: Pipeline = {
@@ -19,4 +19,5 @@ const pipeline: Pipeline = {
   environment: 'dev'
 }
 
-runPipeline(pipeline).catch(console.error);
+previewPipeline(pipeline).catch(console.error);
+// runPipeline(pipeline).catch(console.error);
