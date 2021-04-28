@@ -7,7 +7,7 @@ async function main() {
     workDir: `${__dirname}/sub-a`
   })
 
-  const x = await stack.up()
+  await stack.preview()
 }
 
 main()
