@@ -11,20 +11,6 @@ export interface Pipeline {
   environment: string;
 }
 
-/**
- * You can similarly have a previewPipeline step
- */
-
-/**
- *
- * TODO: This needs to be a DAG.
- *
- * That gets more complicated when you think about skipping steps though.
- *
- * @param stacks The array of stacks to run
- * @param hotfix Is this a hotfix?
- * @param environment
- */
 export async function runPipeline(pipeline: Pipeline) {
   const stacksToRun = pipeline.stacks
     .filter((stack) => !pipeline.hotfix || stack.runOnHotfix)
@@ -37,8 +23,6 @@ export async function runPipeline(pipeline: Pipeline) {
 
   const resolvedStacks = await Promise.all(stacksToRun);
 
-  // TODO: Log about execution order
-
   const executions: Promise<pulumi.automation.UpResult>[] = resolvedStacks.map(async (s) => {
     const result = await s.up();
 
@@ -47,7 +31,7 @@ export async function runPipeline(pipeline: Pipeline) {
     return result;
   });
 
-  Promise.all(executions);
+  await Promise.all(executions);
 }
 
 export async function previewPipeline(pipeline: Pipeline) {
@@ -62,8 +46,6 @@ export async function previewPipeline(pipeline: Pipeline) {
 
   const resolvedStacks = await Promise.all(stacksToRun);
 
-  // TODO: Log about execution order
-
   const executions: Promise<pulumi.automation.PreviewResult>[] = resolvedStacks.map(async (s) => {
     const result = await s.preview();
 
@@ -72,7 +54,5 @@ export async function previewPipeline(pipeline: Pipeline) {
     return result;
   });
 
-  Promise.all(executions).catch((err) => {
-    throw err;
-  });
+  await Promise.all(executions);
 }
