@@ -56,3 +56,11 @@ export async function previewPipeline(pipeline: Pipeline) {
 
   await Promise.all(executions);
 }
+
+export async function executePipeline(pipeline: Pipeline, preview: boolean) {
+  if (preview) {
+    return previewPipeline(pipeline).catch(console.error);
+  } else {
+    return runPipeline(pipeline).catch(console.error);
+  }
+}

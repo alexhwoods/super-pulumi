@@ -1,7 +1,7 @@
 import * as pulumi from '@pulumi/pulumi';
 import { LocalWorkspace } from '@pulumi/pulumi/automation';
 
-import { runPipeline, Pipeline, previewPipeline } from './pipeline';
+import { executePipeline, Pipeline } from './pipeline';
 
 const pipeline: Pipeline = {
   stacks: [
@@ -18,5 +18,5 @@ const pipeline: Pipeline = {
   environment: 'dev',
 };
 
-previewPipeline(pipeline).catch(console.error);
-// runPipeline(pipeline).catch(console.error);
+const preview = false
+executePipeline(pipeline, preview)
