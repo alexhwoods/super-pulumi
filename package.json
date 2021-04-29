@@ -1,10 +1,16 @@
 {
-    "name": "super-pulumi",
-    "devDependencies": {
-        "@types/node": "^10.0.0"
-    },
-    "dependencies": {
-        "@pulumi/pulumi": "^3.0.0",
-        "@pulumi/random": "^4.0.0"
-    }
+  "name": "super-pulumi",
+  "devDependencies": {
+    "@types/node": "^10.0.0",
+    "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "^3.0.0",
+    "@pulumi/random": "^4.0.0",
+    "ts-node": "^9.0.0"
+  },
+  "scripts": {
+    "execute": "./node_modules/ts-node/dist/bin.js index.ts",
+    "format": "prettier \"**/*.{ts,js,json,md,yml}\" --ignore-path .gitignore --write"
+  }
 }

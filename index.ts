@@ -10,4 +10,4 @@ async function main() {
   await stack.preview()
 }
 
-main()
+main().catch(console.error)
